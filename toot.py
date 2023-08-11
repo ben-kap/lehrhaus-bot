@@ -13,7 +13,7 @@ mastodon = Mastodon(
 )
 
 d = feedparser.parse('https://thelehrhaus.com/feed/')
-num_entries = max(len(d.entries),10)
+num_entries = min(len(d.entries),10)
 
 posted_file = dir_name+'/posted.pickle'
 for x in range(num_entries-1,-1,-1):
@@ -31,4 +31,3 @@ for x in range(num_entries-1,-1,-1):
         posted_list.append(link)
         with open(posted_file, 'wb') as f:
             pickle.dump(posted_list, f)
-1
