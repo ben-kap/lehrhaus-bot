@@ -3,6 +3,7 @@ from pathlib import Path
 from mastodon import Mastodon
 import feedparser
 from bs4 import BeautifulSoup
+import textwrap
 import pickle
 
 dir_name = os.path.dirname(__file__)
@@ -27,6 +28,10 @@ for x in range(num_entries-1,-1,-1):
     if link not in posted_list:
         desc = BeautifulSoup(entry.description,'lxml').p.text
         toot = '\"'+entry.title+'\"'+' by '+entry.author+'\n\n'+desc+'\n\n'+entry.link
+        if len(toot)>500:
+            new_desc_len = len(desc)-(len(toot)-500)
+            desc = textwrap.shorten(desc, width =new_desc_len, placeholder='...')
+            toot = '\"'+entry.title+'\"'+' by '+entry.author+'\n\n'+desc+'\n\n'+entry.link
         mastodon.status_post(toot, visibility='public')
         posted_list.append(link)
         with open(posted_file, 'wb') as f:
